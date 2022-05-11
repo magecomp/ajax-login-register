@@ -1,0 +1,148 @@
+<?php
+if($block->isEnable() == 1){
+$url = $block->getBaseUrl().'ajaxlogin/account/createpostnew/';
+$formData = $block->getFormData();
+?>
+    <div class="create-an-accountnew" style="display:none;">
+        <form class="form create account form-create-account"
+              action=""
+              method="post"
+              id="form-validate"
+              enctype="multipart/form-data"
+              data-mage-init='{"validation":{}}'
+              autocomplete="off">
+            <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
+            <fieldset class="fieldset create info">
+                <input type="hidden" name="success_url" value="<?= $escaper->escapeUrl($block->getSuccessUrl()) ?>">
+                <input type="hidden" name="error_url" value="<?= $escaper->escapeUrl($block->getErrorUrl()) ?>">
+                <div class="popup-errors"></div>
+                <?= $block->getLayout()
+                        ->createBlock(\Magento\Customer\Block\Widget\Name::class)
+                        ->setObject($formData)
+                        ->setForceUseCustomerAttributes(true)
+                        ->toHtml() ?>
+            </fieldset>
+            <fieldset class="fieldset create account"
+                      data-hasrequired="<?= $escaper->escapeHtmlAttr(__('* Required Fields')) ?>">
+                <div class="field required">
+                    <label for="email_address" class="label"><span><?= $escaper->escapeHtml(__('Email')) ?></span></label>
+                    <div class="control">
+                        <input type="email"
+                               name="email"
+                               autocomplete="email"
+                               id="email_address"
+                               value="<?= $escaper->escapeHtmlAttr($formData->getEmail()) ?>"
+                               title="<?= $escaper->escapeHtmlAttr(__('Email')) ?>"
+                               class="input-text"
+                               data-mage-init='{"mage/trim-input":{}}'
+                               data-validate="{required:true, 'validate-email':true}">
+                    </div>
+                </div>
+                <div class="field password required">
+                    <label for="password" class="label"><span><?= $escaper->escapeHtml(__('Password')) ?></span></label>
+                    <div class="control">
+                        <input type="password" name="password" id="password"
+                           title="<?= $escaper->escapeHtmlAttr(__('Password')) ?>"
+                           class="input-text"
+                           data-password-min-length="<?=
+                            $escaper->escapeHtmlAttr($block->getMinimumPasswordLength()) ?>"
+                           data-password-min-character-sets="<?=
+                            $escaper->escapeHtmlAttr($block->getRequiredCharacterClassesNumber()) ?>"
+                           data-validate="{required:true, 'validate-customer-password':true}"
+                           autocomplete="off">
+                    </div>
+                </div>
+                <div class="field confirmation required">
+                    <label for="password-confirmation" class="label">
+                        <span><?= $escaper->escapeHtml(__('Confirm Password')) ?></span>
+                    </label>
+                    <div class="control">
+                        <input type="password"
+                               name="password_confirmation"
+                               title="<?= $escaper->escapeHtmlAttr(__('Confirm Password')) ?>"
+                               id="password-confirmation"
+                               class="input-text"
+                               data-validate="{required:true, equalTo:'#password'}"
+                               autocomplete="off">
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="fieldset additional_info">
+                <?= $block->getChildHtml('form_additional_info') ?>
+            </fieldset>
+
+            <div class="actions-toolbar">
+                <div class="primary">
+                    <button type="submit"
+                            class="action submit primary popupaction"
+                            title="<?= $escaper->escapeHtmlAttr(__('Sign Up')) ?>">
+                        <span><?= $escaper->escapeHtml(__('Sign Up')) ?></span>
+                    </button>
+                </div>
+            </div>
+            <div class="account-alreadythere">
+                <span><?php echo __('Already have an Account?') ?></span>&nbsp;<a href="#" class="login-popupbtn"><?php echo __('Login') ?></a>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript">
+        require([
+            'jquery',
+            'Magento_Ui/js/modal/modal'
+        ], function($,modal) {
+            var options = {
+                    'type': 'popup',
+                    'title': 'Create An New Account',
+                    'responsive': true,
+                    'innerScroll': true,
+                    'buttons': []
+                };
+                $('.create-an-account').on('click', function(newregister){
+                    newregister.preventDefault();
+                    var popup = modal(options, $(".create-an-accountnew"));
+                    $(".create-an-accountnew").modal("openModal");
+                    
+                });
+                $('.popupclose').on('click', function(){
+                    $(".modals-wrapper").hide();
+                    
+                });
+                $('.popupaction').on('click', function(){
+                    var formdata = $(".form-create-account").serializeArray();
+                    var url = "<?php echo $block->getBaseUrl().'ajaxlogin/account/createpostnew/' ?>";
+                        $.ajax({
+                        url: url,
+                        type: "POST",
+                        data: formdata,
+                        cache: false,
+                        success: function(data){
+                            if ($('.form-create-account').valid()) {
+                                if(data.errors) {
+                                    $('.popup-errors').empty().append('<div class="message message-error error">'+data.message+'</div>');
+                                } else {
+                                    $(".create-an-accountnew").modal("closeModal");
+                                   location.reload();
+                                }
+                            }
+                        }
+                    });
+                return false;
+                });
+                var optionsignin = {
+                    'type': 'popup',
+                    'title': 'Sign In',
+                    'responsive': true,
+                    'innerScroll': true,
+                    'buttons': []
+                };
+
+                $('.login-popupbtn').on('click', function(loginevent){
+                    loginevent.preventDefault();
+                    var popup = modal(optionsignin, $('#signin-popup')); 
+                    $("#signin-popup").modal("openModal");
+                    $(".create-an-accountnew").modal("closeModal");
+                });
+        });
+    </script>
+<?php } ?>

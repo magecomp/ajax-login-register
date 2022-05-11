@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="register-link">
+            <arguments>
+                <argument name="class" xsi:type="string" translate="true">create-an-account</argument>
+            </arguments>
+        </referenceBlock>
+        <referenceBlock name="authorization-link-login">
+            <arguments>
+                <argument name="class" xsi:type="string" translate="true">signup</argument>
+            </arguments>
+        </referenceBlock>
+        <referenceContainer name="before.body.end">
+            <block class="Magecomp\Ajaxlogin\Block\Signin" name="customer-popup-login" template="Magecomp_Ajaxlogin::signin.phtml" />
+             <block class="Magecomp\Ajaxlogin\Block\Newregister" name="customer-popup-register" template="Magecomp_Ajaxlogin::newregister.phtml"   />
+        </referenceContainer>
+    </body>
+</page>

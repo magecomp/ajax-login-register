@@ -1,0 +1,7 @@
+.magecomp-logo .admin__page-nav-title {
+    background-image: url(https://www.magecomp.com/media/images/magecomp--extension.png)!important;
+    background-size: 192px 30px !important;
+    background-repeat: no-repeat!important;
+    background-position-y: center !important;
+    padding: 2.64rem 1.5rem;
+}
